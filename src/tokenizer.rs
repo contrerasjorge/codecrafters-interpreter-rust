@@ -3,8 +3,9 @@ use std::process;
 pub fn tokenizer(input: &str) {
     let mut line_number = 1;
     let mut had_error = false;
+    let mut chars = input.chars().peekable();
 
-    for char in input.chars() {
+    while let Some(char) = chars.next() {
         match char {
             '(' => println!("LEFT_PAREN ( null"),
             ')' => println!("RIGHT_PAREN ) null"),
@@ -16,6 +17,14 @@ pub fn tokenizer(input: &str) {
             '+' => println!("PLUS + null"),
             '-' => println!("MINUS - null"),
             ';' => println!("SEMICOLON ; null"),
+            '=' => {
+                if chars.peek() == Some(&'=') {
+                    chars.next(); // consume the second '='
+                    println!("EQUAL_EQUAL == null");
+                } else {
+                    println!("EQUAL = null");
+                }
+            }
             '\n' => line_number += 1,
             _ => {
                 eprintln!(
