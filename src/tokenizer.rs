@@ -25,7 +25,16 @@ pub fn tokenizer(input: &str) {
                     println!("EQUAL = null");
                 }
             }
+            '!' => {
+                if chars.peek() == Some(&'=') {
+                    chars.next(); // consume the '='
+                    println!("BANG_EQUAL != null");
+                } else {
+                    println!("BANG ! null");
+                }
+            }
             '\n' => line_number += 1,
+            ' ' | '\r' | '\t' => {} // Ignore whitespace
             _ => {
                 eprintln!(
                     "[line {}] Error: Unexpected character: {}",
