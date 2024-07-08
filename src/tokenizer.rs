@@ -1,4 +1,9 @@
+use std::process;
+
 pub fn tokenizer(input: &str) {
+    let mut line_number = 1;
+    let mut had_error = false;
+
     for char in input.chars() {
         match char {
             '(' => println!("LEFT_PAREN ( null"),
@@ -11,8 +16,19 @@ pub fn tokenizer(input: &str) {
             '+' => println!("PLUS + null"),
             '-' => println!("MINUS - null"),
             ';' => println!("SEMICOLON ; null"),
-            _ => {}
+            '\n' => line_number += 1,
+            _ => {
+                eprintln!(
+                    "[line {}] Error: Unexpected character: {}",
+                    line_number, char
+                );
+                had_error = true;
+            }
         }
     }
     println!("EOF  null");
+
+    if had_error {
+        process::exit(65);
+    }
 }
