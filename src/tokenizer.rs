@@ -81,6 +81,35 @@ pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, String)>> {
                     errors.push((start_line, "Unterminated string.".to_string()));
                 }
             }
+
+            '0'..='9' => {
+                let mut number = String::from(char);
+                let mut has_decimal = false;
+
+                while let Some(&next_char) = chars.peek() {
+                    if next_char.is_digit(10) {
+                        number.push(chars.next().unwrap());
+                    } else if next_char == '.' && !has_decimal {
+                        let mut temp_chars = chars.clone();
+                        temp_chars.next(); // Skip the '.'
+                        if temp_chars.peek().map_or(false, |&c| c.is_digit(10)) {
+                            number.push(chars.next().unwrap()); // Add the '.'
+                            has_decimal = true;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+
+                if has_decimal {
+                    println!("NUMBER {} {}", number, number);
+                } else {
+                    println!("NUMBER {} {}.0", number, number);
+                }
+            }
+
             '\n' => line_number += 1,
             ' ' | '\r' | '\t' => {} // Ignore whitespace
             _ => errors.push((line_number, format!("Unexpected character: {}", char))),
