@@ -49,6 +49,19 @@ pub fn tokenizer(input: &str) {
                     println!("GREATER > null");
                 }
             }
+            '/' => {
+                if chars.peek() == Some(&'/') {
+                    // This is a comment, consume the rest of the line
+                    while let Some(next_char) = chars.next() {
+                        if next_char == '\n' {
+                            line_number += 1;
+                            break;
+                        }
+                    }
+                } else {
+                    println!("SLASH / null");
+                }
+            }
             '\n' => line_number += 1,
             ' ' | '\r' | '\t' => {} // Ignore whitespace
             _ => {
