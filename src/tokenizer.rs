@@ -103,11 +103,27 @@ pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, String)>> {
                     }
                 }
 
-                if has_decimal {
-                    println!("NUMBER {} {}", number, number);
+                // Parse the number and format it to remove trailing zeros
+                let parsed_number: f64 = number.parse().unwrap();
+                let formatted_number = if parsed_number.fract() == 0.0 {
+                    format!("{:.1}", parsed_number) // Always show one decimal place for whole numbers
                 } else {
-                    println!("NUMBER {} {}.0", number, number);
+                    format!("{}", parsed_number) // Remove trailing zeros for fractional numbers
+                };
+
+                println!("NUMBER {} {}", number, formatted_number);
+            }
+
+            'a'..='z' | 'A'..='Z' | '_' => {
+                let mut identifier = String::from(char);
+                while let Some(&next_char) = chars.peek() {
+                    if next_char.is_alphanumeric() || next_char == '_' {
+                        identifier.push(chars.next().unwrap());
+                    } else {
+                        break;
+                    }
                 }
+                println!("IDENTIFIER {} null", identifier);
             }
 
             '\n' => line_number += 1,
