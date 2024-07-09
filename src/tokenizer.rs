@@ -1,4 +1,4 @@
-pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, char)>> {
+pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, String)>> {
     let mut line_number = 1;
     let mut chars = input.chars().peekable();
     let mut errors = Vec::new();
@@ -60,9 +60,30 @@ pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, char)>> {
                     println!("SLASH / null");
                 }
             }
+            '"' => {
+                let start_line = line_number;
+                let mut string_content = String::new();
+                let mut terminated = false;
+
+                while let Some(next_char) = chars.next() {
+                    if next_char == '"' {
+                        terminated = true;
+                        break;
+                    } else if next_char == '\n' {
+                        line_number += 1;
+                    }
+                    string_content.push(next_char);
+                }
+
+                if terminated {
+                    println!("STRING \"{}\" {}", string_content, string_content);
+                } else {
+                    errors.push((start_line, "Unterminated string.".to_string()));
+                }
+            }
             '\n' => line_number += 1,
             ' ' | '\r' | '\t' => {} // Ignore whitespace
-            _ => errors.push((line_number, char)),
+            _ => errors.push((line_number, format!("Unexpected character: {}", char))),
         }
     }
     println!("EOF  null");

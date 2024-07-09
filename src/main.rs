@@ -56,7 +56,7 @@ fn tokenize(filename: &str) -> Result<(), String> {
         Ok(_) => Ok(()),
         Err(errors) => {
             for (line, char) in errors {
-                eprintln!("[line {}] Error: Unexpected character: {}", line, char);
+                eprintln!("[line {}] Error: {}", line, char);
             }
             process::exit(65);
         }
