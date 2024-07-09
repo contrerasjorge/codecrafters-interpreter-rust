@@ -1,9 +1,7 @@
-use std::process;
-
-pub fn tokenizer(input: &str) {
+pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, char)>> {
     let mut line_number = 1;
-    let mut had_error = false;
     let mut chars = input.chars().peekable();
+    let mut errors = Vec::new();
 
     while let Some(char) = chars.next() {
         match char {
@@ -64,18 +62,14 @@ pub fn tokenizer(input: &str) {
             }
             '\n' => line_number += 1,
             ' ' | '\r' | '\t' => {} // Ignore whitespace
-            _ => {
-                eprintln!(
-                    "[line {}] Error: Unexpected character: {}",
-                    line_number, char
-                );
-                had_error = true;
-            }
+            _ => errors.push((line_number, char)),
         }
     }
     println!("EOF  null");
 
-    if had_error {
-        process::exit(65);
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(errors)
     }
 }
