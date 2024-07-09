@@ -1,4 +1,28 @@
+use std::collections::HashMap;
+
 pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, String)>> {
+    let keywords: HashMap<&str, &str> = [
+        ("and", "AND"),
+        ("class", "CLASS"),
+        ("else", "ELSE"),
+        ("false", "FALSE"),
+        ("for", "FOR"),
+        ("fun", "FUN"),
+        ("if", "IF"),
+        ("nil", "NIL"),
+        ("or", "OR"),
+        ("print", "PRINT"),
+        ("return", "RETURN"),
+        ("super", "SUPER"),
+        ("this", "THIS"),
+        ("true", "TRUE"),
+        ("var", "VAR"),
+        ("while", "WHILE"),
+    ]
+    .iter()
+    .cloned()
+    .collect();
+
     let mut line_number = 1;
     let mut chars = input.chars().peekable();
     let mut errors = Vec::new();
@@ -123,7 +147,11 @@ pub fn tokenizer(input: &str) -> Result<(), Vec<(usize, String)>> {
                         break;
                     }
                 }
-                println!("IDENTIFIER {} null", identifier);
+                if let Some(&token_type) = keywords.get(identifier.as_str()) {
+                    println!("{} {} null", token_type, identifier);
+                } else {
+                    println!("IDENTIFIER {} null", identifier);
+                }
             }
 
             '\n' => line_number += 1,
