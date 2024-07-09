@@ -33,6 +33,22 @@ pub fn tokenizer(input: &str) {
                     println!("BANG ! null");
                 }
             }
+            '<' => {
+                if chars.peek() == Some(&'=') {
+                    chars.next(); // consume the '='
+                    println!("LESS_EQUAL <= null");
+                } else {
+                    println!("LESS < null");
+                }
+            }
+            '>' => {
+                if chars.peek() == Some(&'=') {
+                    chars.next(); // consume the '='
+                    println!("GREATER_EQUAL >= null");
+                } else {
+                    println!("GREATER > null");
+                }
+            }
             '\n' => line_number += 1,
             ' ' | '\r' | '\t' => {} // Ignore whitespace
             _ => {
